@@ -1,66 +1,129 @@
-SportStalker  version 1.1.0
+SportStalker  version 1.2.0
 ==================
 
 Usage instructions
 ==================
 
-This project is a maven project. To package it, run `mvn clean install`. The corresponding jar file is generated
-under the `target` directory and is now available from you maven local repository. 
-You can then import it in your project as a maven dependency.
+You can use the SDK in three different ways, according to your preferences:
+
+* As a Gradle dependency
+* By building a JAR and copying it in the libs folder of your project
+* By copying the source code in your project
+
+Use the SDK as a Gradle dependency
+-------------------
+
+To build the SDK, simply run `./gradlew clean install`. This will install the JAR files (binaries, sources and javadoc) in your local Maven repository.
+
+It can be imported in your project by adding the following lines to your `build.gradle` file:
+
+```groovy
+dependencies {
+    compile "net.apispark.webapi:SportStalker:1.0.0"
+}
+
+repositories {
+    mavenLocal()
+}
+```
+
+Use the SDK as a JAR
+-------------------
+
+To package the SDK, run `./gradlew clean build`. The corresponding JAR files (binaries, sources and javadoc) will be generated under the `build/libs` directory.
+
+To integrate it in your project, copy the JAR file in the `app/libs` folder of your project. This folder is already imported in your project dependencies (`compile fileTree(dir: 'libs', include: ['*.jar'])`).
+
+You’ll then have to add the following dependencies to your `build.gradle` file:
+
+```groovy
+dependencies {
+    compile("org.restlet.android:org.restlet.ext.jackson:2.3.4") {
+        exclude group: 'javax.xml.stream', module: 'stax-api'
+    }
+}
+```
+
+Click the "Sync your project with Gradle files" button to update your project.
+
+Use the source directly
+-------------------
+
+Another usage option is to directly copy the SDK sources (in `src/main/java`) to your project.
+In order to build them, add the following lines to your `build.gradle` file:
+
+```groovy
+dependencies {
+    compile("org.restlet.android:org.restlet.ext.jackson:2.3.4") {
+        exclude group: 'javax.xml.stream', module: 'stax-api'
+    }
+}
+```
+
+Gradle packaging options
+------------------------
+
+The following set of packaging options are required for Jackson library to work properly:
+
+```groovy
+android {
+    packagingOptions {
+        exclude 'META-INF/services/com.fasterxml.jackson.core.JsonFactory'
+        exclude 'META-INF/services/com.fasterxml.jackson.core.ObjectCodec'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+}
+```
+
+Permissions
+-----------
+
+Update permissions in `AndroidManifest.xml` to enable Internet, by adding the following line:
+
+```xml
+<uses-permission android:name="android.permission.INTERNET" />
+```
+
+
+Getting started with the SDK
+=================
 
 Project structure
-=================
+-----------
 
 * The main entry point to make API calls is the `Sdk` class
 * The representation beans for input and output payloads are in package `net.apispark.webapi.representation`
 * The classes for authentication are in package `net.apispark.webapi.auth`. See section "Configure credentials" below.
 
-Maven integration 
-===============
-
-In your `pom.xml`, add the following lines:
-
-```
-<dependencies>
-    <!-- ... -->
-    <dependency>
-        <groupId>net.apispark.webapi</groupId>
-        <artifactId>SportStalker</artifactId>
-        <version>1.0.0</version>
-    </dependency>
-</dependencies>
-```
 
 Usage
-=====
+-----------
 
 Considering an API called sdk_test with the following endpoints:
 * GET /companies/{companyId}
 * POST /companies
 
-API calls would be made like this:
+With this methods, an API call would be done with the following code :
 
 ```java
 Sdk sdkTest = new Sdk();
 
+// Let's set up the basic auth
 SecurityConfig securityConfig = sdkTest.getConfig().getSecurityConfig();
+// Method name depends of the supported security scheme of the API. For more details about how to configure security, see section "Configure credentials" below
 
-// Configure one of the security schemes defined in the API definition. The security
-// configuration exposes one method per scheme, with the name of the scheme used as a
-// suffix for the method’s name. For more details about how to configure security, see
-// section "Configure credentials" below.
 securityConfig.configureAuthBasic("login", "password");
 
 // Get the company of id 1
 try {
     Company company = sdkTest.company("1").getCompany();
-    System.out.println("Company with ID 1: " + company.getName());
+    Log.i("myapplication", "Company with ID 1: " + company.getName());
 } catch(ResourceException e) {
-    System.err.println("Status: " + e.getStatus());
+    Log.e("myapplication", "Status: " + e.getStatus(), e); // An exception occurs when getting the company with id 1
 }
 
 // Add a new company
-
 Company newCompany = new Company();
 newCompany.setName("My company");
 Address newCompanyAddress = new Address();
@@ -68,18 +131,18 @@ newCompanyAddress.setStreet("");
 newCompanyAddress.setZipcode("");
 newCompanyAddress.setCity("");
 newCompany.setAddress(newCompanyAddress);
-newCompany.setTags(Arrays.asList("high-tech"));
+newCompany.setTags(Arrays.asList("high technologies"));
 
 try {
     Company addedCompany = sdkTest.companyList().postCompanyList(newCompany);
-    System.out.println("New company created with ID " + addedCompany.getId());
+    Log.i("myapplication", "New company created with ID " + addedCompany.getId());
 } catch(ResourceException e) {
-    System.err.println("Status: " + e.getStatus());
+    Log.e("myapplication", "Status: " + e.getStatus(), e);
 }
 ```
 
 Configure credentials
-=====================
+-----------
 
 * Configure settings for security schemes declared in the API definition
 
@@ -107,12 +170,3 @@ sdk.getConfig().getSecurityConfig()
             .configureCustomGlobalAuth(
                     new HeaderApiKeyAuthenticator("X-Custom-Auth", "customToken"));
 ```
-
-Logging
-=======
-
-By default, the API server uses the java logging (JUL).
-You can specify the configuration file with the following system property `-Djava.util.logging.config.file="/path/to/logging.properties"`
-
-For more explanations, see: http://restlet.com/technical-resources/restlet-framework/guide/2.3/editions/jse/logging
-

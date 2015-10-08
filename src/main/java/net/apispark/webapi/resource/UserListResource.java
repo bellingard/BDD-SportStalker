@@ -8,7 +8,7 @@ public interface UserListResource {
     /**
      * Loads a list of User.
      *
-     * @return  {@link net.apispark.webapi.representation.UserList} 
+     * @return {@link net.apispark.webapi.representation.UserList} 
      * @throws org.restlet.resource.ResourceException if the call to the API fails
      */
     @Get
@@ -17,7 +17,7 @@ public interface UserListResource {
     /**
      * Adds a User.
      *
-     * @return  {@link net.apispark.webapi.representation.User} 
+     * @return {@link net.apispark.webapi.representation.User} 
      * @throws org.restlet.resource.ResourceException if the call to the API fails
      */
     @Post

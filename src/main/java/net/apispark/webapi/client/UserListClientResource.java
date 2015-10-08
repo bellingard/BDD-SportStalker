@@ -35,7 +35,7 @@ public class UserListClientResource extends AbstractClientResource {
      *            Number of the page to retrieve. Integer value.
      * @param username
      *            Allows to filter the collections of result by the value of field username
-     * @return {@link net.apispark.webapi.representation.UserList} 
+    * @return {@link net.apispark.webapi.representation.UserList} 
      * @throws org.restlet.resource.ResourceException if the call to the API fails
      */
     public net.apispark.webapi.representation.UserList getUserList(java.lang.String size, java.lang.String id, java.lang.String sort, java.lang.String longitude, java.lang.String latitude, java.lang.String page, java.lang.String username) {
@@ -58,7 +58,7 @@ public class UserListClientResource extends AbstractClientResource {
      * 
      * @param bean
      *            Parameter "bean"
-     * @return {@link net.apispark.webapi.representation.User} 
+    * @return {@link net.apispark.webapi.representation.User} 
      * @throws org.restlet.resource.ResourceException if the call to the API fails
      */
     public net.apispark.webapi.representation.User postUserList(net.apispark.webapi.representation.User bean) {

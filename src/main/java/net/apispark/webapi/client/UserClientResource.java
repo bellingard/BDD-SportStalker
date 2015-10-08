@@ -26,7 +26,7 @@ public class UserClientResource extends AbstractClientResource {
     /**
      * Loads a User.
      * 
-     * @return {@link net.apispark.webapi.representation.User} 
+    * @return {@link net.apispark.webapi.representation.User} 
      * @throws org.restlet.resource.ResourceException if the call to the API fails
      */
     public net.apispark.webapi.representation.User getUser() {
@@ -43,7 +43,7 @@ public class UserClientResource extends AbstractClientResource {
      * 
      * @param bean
      *            Parameter "bean"
-     * @return {@link net.apispark.webapi.representation.User} 
+    * @return {@link net.apispark.webapi.representation.User} 
      * @throws org.restlet.resource.ResourceException if the call to the API fails
      */
     public net.apispark.webapi.representation.User putUser(net.apispark.webapi.representation.User bean) {

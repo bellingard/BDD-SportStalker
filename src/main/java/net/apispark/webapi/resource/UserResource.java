@@ -9,7 +9,7 @@ public interface UserResource {
     /**
      * Loads a User.
      *
-     * @return  {@link net.apispark.webapi.representation.User} 
+     * @return {@link net.apispark.webapi.representation.User} 
      * @throws org.restlet.resource.ResourceException if the call to the API fails
      */
     @Get
@@ -18,7 +18,7 @@ public interface UserResource {
     /**
      * Stores a User.
      *
-     * @return  {@link net.apispark.webapi.representation.User} 
+     * @return {@link net.apispark.webapi.representation.User} 
      * @throws org.restlet.resource.ResourceException if the call to the API fails
      */
     @Put
