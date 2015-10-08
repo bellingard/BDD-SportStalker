@@ -1,15 +1,9 @@
 package net.apispark.webapi.auth;
 
-import static java.util.Objects.requireNonNull;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import net.apispark.webapi.auth.generic.NoAuthAuthenticator;
 import net.apispark.webapi.auth.defined.HTTP_BASICAuthenticator;
+import net.apispark.webapi.auth.generic.NoAuthAuthenticator;
+
+import java.util.*;
 
 public class SecurityConfig {
 
@@ -26,12 +20,12 @@ public class SecurityConfig {
     /**
      * The list of schemes listed as API-level security requirements.
      */
-    private final List<Class<? extends Authenticator>> globalRequirements = new ArrayList<>();
+    private final List<Class<? extends Authenticator>> globalRequirements = new ArrayList<Class<? extends Authenticator>>();
 
     /**
      * Maps schemes to configured authenticators to use for API calls.
      */
-    private final Map<Class<? extends Authenticator>, Authenticator> configuredAuthenticators = new HashMap<>();
+    private final Map<Class<? extends Authenticator>, Authenticator> configuredAuthenticators = new HashMap<Class<? extends Authenticator>, Authenticator>();
 
     public SecurityConfig() {
         // API Global requirements
@@ -42,11 +36,9 @@ public class SecurityConfig {
 
     /**
      * Adds configuration for the authentication scheme: HTTP Basic.
-     * 
-     * @param userId
-     *            The user identifier.
-     * @param password
-     *            The user password.
+     *
+     * @param userId   The user identifier.
+     * @param password The user password.
      * @return the current {@link SecurityConfig} for chaining method calls.
      */
     public SecurityConfig configureAuthHTTP_BASIC(String userId, String password) {
@@ -59,10 +51,10 @@ public class SecurityConfig {
     /**
      * Registers an {@link Authenticator} to be used as a fallback global authentication mechanism. This should only
      * be useful if the API definition defines no security schemes while the actual API uses one.
-     *
+     * <p/>
      * For example, if the API definitions contains no security scheme definition, but the actual API expects call to
      * be authenticated using HTTP Basic, then this method should be called like this:
-     *
+     * <p/>
      * <code>
      * configureCustomGlobalAuth(new HttpBasicAuthenticator(userId, password));
      * </code>
@@ -82,19 +74,17 @@ public class SecurityConfig {
     /**
      * Overrides an existing schemes by a possibly completely different authentication mechanism. This should only be
      * useful if the API definition defines security schemes that are incorrect.
-     *
+     * <p/>
      * For example, if the API definition defines a security schemes named "queryToken" which says the caller should
      * place a token in a query parameter named "token", but the actual API expects a token named "t", then this method
      * should be called like this:
-     *
+     * <p/>
      * <code>
      * configureCustomAuth(QueryTokenAuthenticator.class, new QueryApiKeyAuthenticator("t", tokenValue));
      * </code>
      *
-     * @param scheme
-     *            the scheme to override ; should be a class from net.apispark.webapi.auth.defined
-     * @param replacement
-     *            the authenticator to use when the scheme is required, instead of the scheme's authenticator
+     * @param scheme      the scheme to override ; should be a class from net.apispark.webapi.auth.defined
+     * @param replacement the authenticator to use when the scheme is required, instead of the scheme's authenticator
      * @return this {@link SecurityConfig}
      */
     public SecurityConfig configureCustomAuth(
@@ -127,10 +117,8 @@ public class SecurityConfig {
      * Picks a configured {@link Authenticator} instance corresponding to one of the provided schemes. If no schemes
      * are provided, then picks among the global ones.
      *
-     * @param operationRequirements
-     *            List of {@link Authenticator} accepted by the operation
-     * @throws AuthenticatorNotFoundException
-     *             if no compatible and configured {@link Authenticator} was found
+     * @param operationRequirements List of {@link Authenticator} accepted by the operation
+     * @throws AuthenticatorNotFoundException if no compatible and configured {@link Authenticator} was found
      */
     protected Authenticator getConfiguredAuthenticator(Class<? extends Authenticator>... operationRequirements) {
         for (Class<? extends Authenticator> authenticatorId : operationRequirements) {
@@ -149,4 +137,12 @@ public class SecurityConfig {
         return securityRuntimeConfigurator;
     }
 
-}
+    public static <T> T requireNonNull(T obj) {
+        if (obj == null) {
+            throw new NullPointerException();
+        } else {
+            return obj;
+        }
+    }
+
+    }

@@ -12,6 +12,9 @@ repositories{
     }
 }
 
+task test
+
+/*
 task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
@@ -26,11 +29,12 @@ artifacts {
     archives sourcesJar
     archives javadocJar
 }
+*/
 
 dependencies {
     compile('org.restlet.android:org.restlet.ext.jackson:2.3.4'){
         exclude group: 'javax.xml.stream', module: 'stax-api'
     }
-    test('junit:junit:4.12')
-    test('org.assertj:assertj-core:2.1.0')
+    testCompile('junit:junit:4.12')
+    testCompile('org.assertj:assertj-core:2.1.0')
 }
