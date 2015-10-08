@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.*;
 public class UserServicesTest {
 
     private static UserServices userServices = UserServices.INSTANCE;
-    private static ArrayList<String> fakeUserIdList = new ArrayList<>();
+    private static ArrayList<String> fakeUserIdList = new ArrayList<String>();
 
     @AfterClass
     public static void cleanup_fake_users() {
