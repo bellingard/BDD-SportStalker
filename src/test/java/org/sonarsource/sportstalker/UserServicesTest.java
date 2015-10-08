@@ -17,7 +17,7 @@ public class UserServicesTest {
     public static void cleanup_fake_users() {
         userServices.log("Cleaning Fake users...");
         for (String userId : fakeUserIdList) {
-            
+            userServices.unregisterUser(userId);
         }
     }
 
@@ -29,7 +29,7 @@ public class UserServicesTest {
 
     @Test
     public void should_register_new_user() {
-        String randomUserName = "Fake-User " + Math.random();
+        String randomUserName = generateRandomUserName();
         String userId = registerNewUser(randomUserName);
         assertThat(userId).isNotNull();
 
@@ -42,13 +42,30 @@ public class UserServicesTest {
 
     @Test
     public void should_update_user_position() {
-        String randomUserName = "Fake-User " + Math.random();
+        String randomUserName = generateRandomUserName();
         String userId = registerNewUser(randomUserName);
         userServices.updatePosition(userId, "12.345", "67.89");
 
         User foundUser = userServices.locateUser(randomUserName);
         assertThat(foundUser.getLatitude()).isEqualTo("12.345");
         assertThat(foundUser.getLongitude()).isEqualTo("67.89");
+    }
+
+    @Test
+    public void should_unregister_user() {
+        String randomUserName = generateRandomUserName();
+        String userId = registerNewUser(randomUserName);
+        assertThat(userId).isNotNull();
+
+        userServices.unregisterUser(userId);
+
+        User foundUser = userServices.locateUser(randomUserName);
+        assertThat(foundUser).isNull();
+        fakeUserIdList.remove(userId);
+    }
+
+    private String generateRandomUserName() {
+        return "Fake-User " + Math.random();
     }
 
     private String registerNewUser(String randomUserName) {

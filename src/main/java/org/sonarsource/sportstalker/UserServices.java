@@ -67,8 +67,11 @@ public enum UserServices {
         return userList.isEmpty() ? null : userList.iterator().next();
     }
 
+    /**
+     * Deletes a user who had been previously registered.
+     */
     public void unregisterUser(String userId) {
-
+        sportStalkerSdk.user(userId).deleteUser();
     }
 
 }
