@@ -3,8 +3,11 @@
 // failed.", it means you probably did not give permission for the browser to
 // locate you.
 
+var map;
+var userMarkers = {};
+
 function initMap() {
-  var map = new google.maps.Map(document.getElementById('map'), {
+  map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: -34.397, lng: 150.644},
     zoom: 19
   });
@@ -22,8 +25,6 @@ function initMap() {
       infoWindow.setContent('BDD Room');
 
       map.setCenter(pos);
-
-      fetchUserLocations(map);
     }, function() {
       handleLocationError(true, infoWindow, map.getCenter());
     });
@@ -40,12 +41,12 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
                         'Error: Your browser does not support geolocation.');
 }
 
-function fetchUserLocations(map) {
+function fetchUserLocations() {
 
   var req = new XMLHttpRequest();
   req.onreadystatechange = function() {
       if (req.readyState == 4 && req.status == 200) {
-          showLocations(map, req.responseText);
+          showLocations(req.responseText);
       }
   }
   req.open("GET", "https://sportstalker.apispark.net/v1/users/", true);
@@ -53,15 +54,24 @@ function fetchUserLocations(map) {
   req.send(null);
 }
 
-function showLocations(map, responseText) {
+function showLocations(responseText) {
   var users = JSON.parse(responseText);
+
   users.forEach(function(user) {
-    var marker = new google.maps.Marker({
-      map: map,
-      position: {lat: parseFloat(user.latitude), lng: parseFloat(user.longitude)},
-      icon: {url: 'mini_icon_run.png'},
-      title: user.username
-    });
-    marker.setAnimation();
+    var marker = userMarkers[user.username];
+    if (marker) {
+        marker.setPosition({lat: parseFloat(user.latitude), lng: parseFloat(user.longitude)});
+    } else {
+        var marker = new google.maps.Marker({
+          map: map,
+          position: {lat: parseFloat(user.latitude), lng: parseFloat(user.longitude)},
+          icon: {url: 'mini_icon_run.png'},
+          title: user.username
+        });
+        userMarkers[user.username] = marker;
+    }
+    
   });
 }
+
+setInterval(fetchUserLocations, 1000);
