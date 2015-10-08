@@ -31,4 +31,6 @@ dependencies {
     compile('org.restlet.android:org.restlet.ext.jackson:2.3.4'){
         exclude group: 'javax.xml.stream', module: 'stax-api'
     }
+    test('junit:junit:4.12')
+    test('org.assertj:assertj-core:2.1.0')
 }
